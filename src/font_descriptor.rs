@@ -277,6 +277,15 @@ pub fn new_from_attributes(attributes: &CFDictionary) -> CTFontDescriptor {
     }
 }
 
+pub fn new_from_variations(variations: &CFDictionary) -> CTFontDescriptor {
+    unsafe {
+        let var_key = CFType::wrap_under_get_rule(mem::transmute(kCTFontVariationAttribute));
+        let var_val = CFType::wrap_under_get_rule(variations.as_CFTypeRef());
+        let attributes = CFDictionary::from_CFType_pairs(&[(var_key, var_val)]);
+        new_from_attributes(&attributes)
+    }
+}
+
 pub fn debug_descriptor(desc: &CTFontDescriptor) {
     println!("family: {}", desc.family_name());
     println!("name: {}", desc.font_name());
